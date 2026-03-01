@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>zhifeijiyut.lua 生成器</title>
+  <title>纸lua生成器</title>
   <style>
     body {
       margin: 0;
@@ -21,9 +21,20 @@
       color: #a0c0ff;
       margin-bottom: 20px;
     }
-    textarea {
+    .main-area {
       width: 90%;
       max-width: 960px;
+      display: flex;
+      gap: 30px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .editor {
+      flex: 1;
+      min-width: 500px;
+    }
+    textarea {
+      width: 100%;
       height: 480px;
       padding: 20px;
       background: #141422;
@@ -35,46 +46,83 @@
       resize: vertical;
       box-shadow: 0 4px 20px rgba(0,0,0,0.6);
     }
+    .sidebar {
+      width: 240px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      align-items: center;
+    }
     button {
-      margin-top: 20px;
-      padding: 16px 60px;
+      padding: 16px 40px;
       font-size: 18px;
       font-weight: bold;
-      background: #4a6bff;
-      color: white;
       border: none;
       border-radius: 8px;
       cursor: pointer;
       transition: 0.25s;
+      width: 100%;
+      max-width: 240px;
     }
-    button:hover {
+    #generateBtn {
+      background: #4a6bff;
+      color: white;
+    }
+    #generateBtn:hover {
       background: #5a7bff;
       transform: translateY(-3px);
       box-shadow: 0 8px 25px rgba(74,107,255,0.4);
+    }
+    #copyAuthorBtn {
+      background: #ff69b4;
+      color: white;
+    }
+    #copyAuthorBtn:hover {
+      background: #ff85c0;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(255,105,180,0.4);
     }
     #msg {
       margin-top: 20px;
       font-size: 16px;
       color: #a0ffcc;
+      text-align: center;
+      width: 100%;
+      max-width: 960px;
     }
   </style>
 </head>
 <body>
 
-  <h1>zhifeijiyut.lua 生成器</h1>
+  <h1>纸lua 生成器</h1>
 
-  <textarea id="code" placeholder="-- 粘贴你的 Lua 代码在这里
--- 点击按钮后会自动下载 zhifeijiyut.lua
+  <div class="main-area">
+    <div class="editor">
+      <textarea id="code" placeholder="-- 粘贴你的 Lua 代码在这里
+-- 点击生成按钮后会自动下载（自动递增编号，避免覆盖）
 
-print('zhifeijiyut 启动！')
+print('启动中')
 local player = game.Players.LocalPlayer
 player.Character.Humanoid.WalkSpeed = 100"></textarea>
+    </div>
 
-  <button onclick="generate()">生成并下载 zhifeijiyut.lua</button>
+    <div class="sidebar">
+      <button id="generateBtn" onclick="generate()">生成并下载</button>
+      <button id="copyAuthorBtn" onclick="copyAuthor()">复制作者 B 站主页</button>
+    </div>
+  </div>
 
   <div id="msg"></div>
 
   <script>
+    // 获取/设置当前最大序号（保存在浏览器本地）
+    function getNextIndex() {
+      let index = parseInt(localStorage.getItem('zhifeijiyut_index') || '0', 10);
+      index += 1;
+      localStorage.setItem('zhifeijiyut_index', index);
+      return index;
+    }
+
     function generate() {
       const code = document.getElementById('code').value.trim();
       const msg = document.getElementById('msg');
@@ -85,20 +133,41 @@ player.Character.Humanoid.WalkSpeed = 100"></textarea>
         return;
       }
 
+      const index = getNextIndex();
+      let filename = 'zhifeijiyut';
+      if (index > 1) {
+        filename += `(${index-1})`;
+      }
+      filename += '.lua';
+
       const blob = new Blob([code], { type: 'text/plain;charset=utf-8' });
       const url = URL.createObjectURL(blob);
 
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'zhifeijiyut.lua';
+      a.download = filename;
       a.style.display = 'none';
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
 
-      msg.textContent = '已下载 zhifeijiyut.lua • 大小：' + (code.length / 1024).toFixed(1) + ' KB';
+      msg.textContent = `已下载：\( {filename}  •  大小： \){(code.length / 1024).toFixed(1)} KB`;
       msg.style.color = '#a0ffcc';
+    }
+
+    function copyAuthor() {
+      const link = 'https://b23.tv/4DZnv9H';
+      navigator.clipboard.writeText(link).then(() => {
+        const msg = document.getElementById('msg');
+        msg.textContent = '已复制作者 B 站主页：' + link;
+        msg.style.color = '#ff69b4';
+        setTimeout(() => {
+          msg.textContent = '';
+        }, 5000);
+      }).catch(() => {
+        alert('复制失败，请手动复制：https://b23.tv/4DZnv9H');
+      });
     }
   </script>
 
