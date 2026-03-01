@@ -140,7 +140,7 @@ player.Character.Humanoid.WalkSpeed = 100"></textarea>
       }
       filename += '.lua';
 
-      // 使用 application/octet-stream 强制浏览器不自动加.txt 后缀
+      // 使用 application/octet-stream 强制浏览器不自动加 .txt 后缀
       const blob = new Blob([code], { type: 'application/octet-stream' });
       const url = URL.createObjectURL(blob);
 
