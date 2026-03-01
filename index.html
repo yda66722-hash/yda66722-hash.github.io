@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>纸lua生成器</title>
+  <title>纸lua 生成器</title>
   <style>
     body {
       margin: 0;
@@ -99,15 +99,15 @@
   <div class="main-area">
     <div class="editor">
       <textarea id="code" placeholder="-- 粘贴你的 Lua 代码在这里
--- 点击生成按钮后会自动下载（自动递增编号，避免覆盖）
+-- 点击生成后会自动下载（自动递增编号，避免覆盖）
 
-print('hello,wold')
+print('hello,world')
 local player = game.Players.LocalPlayer
 player.Character.Humanoid.WalkSpeed = 100"></textarea>
     </div>
 
     <div class="sidebar">
-      <button id="generateBtn" onclick="generate()">下载</button>
+      <button id="generateBtn" onclick="generate()">生成并下载</button>
       <button id="copyAuthorBtn" onclick="copyAuthor()">复制作者 B 站主页</button>
     </div>
   </div>
@@ -140,7 +140,8 @@ player.Character.Humanoid.WalkSpeed = 100"></textarea>
       }
       filename += '.lua';
 
-      const blob = new Blob([code], { type: 'text/plain;charset=utf-8' });
+      // 使用 application/octet-stream 强制浏览器不自动加 .txt 后缀
+      const blob = new Blob([code], { type: 'application/octet-stream' });
       const url = URL.createObjectURL(blob);
 
       const a = document.createElement('a');
@@ -162,9 +163,7 @@ player.Character.Humanoid.WalkSpeed = 100"></textarea>
         const msg = document.getElementById('msg');
         msg.textContent = '已复制作者 B 站主页：' + link;
         msg.style.color = '#ff69b4';
-        setTimeout(() => {
-          msg.textContent = '';
-        }, 5000);
+        setTimeout(() => { msg.textContent = ''; }, 5000);
       }).catch(() => {
         alert('复制失败，请手动复制：https://b23.tv/4DZnv9H');
       });
