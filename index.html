@@ -7,101 +7,98 @@
   <style>
     body {
       margin: 0;
-      padding: 20px;
-      font-family: Arial, sans-serif;
-      background: #0a0e14;
-      color: #e6edf3;
+      padding: 0;
+      font-family: system-ui, sans-serif;
+      background: #0f0f17;
+      color: #e0e0ff;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
     }
     h1 {
-      color: #79c0ff;
-      margin: 20px 0 10px;
-      font-size: 2.2rem;
+      color: #a0c0ff;
+      margin-bottom: 20px;
     }
     textarea {
-      width: 100%;
-      max-width: 900px;
-      height: 500px;
+      width: 90%;
+      max-width: 960px;
+      height: 480px;
       padding: 20px;
-      background: #0d1117;
-      border: 1px solid #30363d;
-      border-radius: 8px;
-      color: #c9d1d9;
-      font-family: 'Consolas', 'Courier New', monospace;
+      background: #141422;
+      border: 1px solid #333355;
+      border-radius: 10px;
+      color: #d0d0ff;
+      font-family: Consolas, monospace;
       font-size: 15px;
       resize: vertical;
-      margin-bottom: 20px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.6);
     }
     button {
-      padding: 14px 40px;
+      margin-top: 20px;
+      padding: 16px 60px;
       font-size: 18px;
       font-weight: bold;
-      background: #238636;
+      background: #4a6bff;
       color: white;
       border: none;
       border-radius: 8px;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: 0.25s;
     }
     button:hover {
-      background: #2ea043;
-      transform: translateY(-2px);
+      background: #5a7bff;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(74,107,255,0.4);
     }
-    #status {
-      margin-top: 15px;
-      color: #8b949e;
-      font-size: 15px;
-    }
-    .tip {
-      color: #8b949e;
-      margin: 10px 0 30px;
-      font-size: 14px;
+    #msg {
+      margin-top: 20px;
+      font-size: 16px;
+      color: #a0ffcc;
     }
   </style>
 </head>
 <body>
 
   <h1>zhifeijiyut.lua 生成器</h1>
-  <p class="tip">把你的 Lua 代码粘贴下面 → 点生成 → 自动下载 zhifeijiyut.lua</p>
 
-  <textarea id="code" placeholder="-- 在这里粘贴你的 Lua 脚本
--- 示例：
-print('Hello from zhifeijiyut!')
-wait(1)
-game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 100"></textarea>
+  <textarea id="code" placeholder="-- 粘贴你的 Lua 代码在这里
+-- 点击按钮后会自动下载 zhifeijiyut.lua
 
-  <button onclick="downloadLua()">生成 zhifeijiyut.lua</button>
+print('zhifeijiyut 启动！')
+local player = game.Players.LocalPlayer
+player.Character.Humanoid.WalkSpeed = 100"></textarea>
 
-  <div id="status"></div>
+  <button onclick="generate()">生成并下载 zhifeijiyut.lua</button>
+
+  <div id="msg"></div>
 
   <script>
-    function downloadLua() {
-      const content = document.getElementById('code').value;
-      const status = document.getElementById('status');
+    function generate() {
+      const code = document.getElementById('code').value.trim();
+      const msg = document.getElementById('msg');
 
-      if (!content.trim()) {
-        status.textContent = '内容为空，请输入一些代码哦\~';
-        status.style.color = '#f85149';
+      if (!code) {
+        msg.textContent = '请输入代码再生成哦～';
+        msg.style.color = '#ff7777';
         return;
       }
 
-      const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+      const blob = new Blob([code], { type: 'text/plain;charset=utf-8' });
       const url = URL.createObjectURL(blob);
 
       const a = document.createElement('a');
       a.href = url;
       a.download = 'zhifeijiyut.lua';
+      a.style.display = 'none';
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
 
-      status.textContent = '已下载：zhifeijiyut.lua （' + (content.length / 1024).toFixed(1) + ' KB）';
-      status.style.color = '#58a6ff';
+      msg.textContent = '已下载 zhifeijiyut.lua • 大小：' + (code.length / 1024).toFixed(1) + ' KB';
+      msg.style.color = '#a0ffcc';
     }
   </script>
 
