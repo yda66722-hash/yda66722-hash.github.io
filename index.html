@@ -1,174 +1,74 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>纸lua 生成器</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: system-ui, sans-serif;
-      background: #0f0f17;
-      color: #e0e0ff;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-    h1 {
-      color: #a0c0ff;
-      margin-bottom: 20px;
-    }
-    .main-area {
-      width: 90%;
-      max-width: 960px;
-      display: flex;
-      gap: 30px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    .editor {
-      flex: 1;
-      min-width: 500px;
-    }
-    textarea {
-      width: 100%;
-      height: 480px;
-      padding: 20px;
-      background: #141422;
-      border: 1px solid #333355;
-      border-radius: 10px;
-      color: #d0d0ff;
-      font-family: Consolas, monospace;
-      font-size: 15px;
-      resize: vertical;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.6);
-    }
-    .sidebar {
-      width: 240px;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      align-items: center;
-    }
-    button {
-      padding: 16px 40px;
-      font-size: 18px;
-      font-weight: bold;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: 0.25s;
-      width: 100%;
-      max-width: 240px;
-    }
-    #generateBtn {
-      background: #4a6bff;
-      color: white;
-    }
-    #generateBtn:hover {
-      background: #5a7bff;
-      transform: translateY(-3px);
-      box-shadow: 0 8px 25px rgba(74,107,255,0.4);
-    }
-    #copyAuthorBtn {
-      background: #ff69b4;
-      color: white;
-    }
-    #copyAuthorBtn:hover {
-      background: #ff85c0;
-      transform: translateY(-3px);
-      box-shadow: 0 8px 25px rgba(255,105,180,0.4);
-    }
-    #msg {
-      margin-top: 20px;
-      font-size: 16px;
-      color: #a0ffcc;
-      text-align: center;
-      width: 100%;
-      max-width: 960px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <title>文件转 TXT 链接工具</title>
 </head>
 <body>
 
-  <h1>纸lua 生成器</h1>
+    <h1>文件转 TXT 链接生成器</h1>
+    <hr>
 
-  <div class="main-area">
-    <div class="editor">
-      <textarea id="code" placeholder="-- 粘贴你的 Lua 代码在这里
--- 点击生成后会自动下载（自动递增编号，避免覆盖）
+    <p>1. 选择一个文件（任何文件）：</p>
+    <input type="file" id="fileInput">
 
-print('hello,world')
-local player = game.Players.LocalPlayer
-player.Character.Humanoid.WalkSpeed = 100"></textarea>
+    <p>2. 处理状态：<span id="status">等待上传...</span></p>
+
+    <hr>
+
+    <div id="linkContainer">
+        <p>3. 生成结果：</p>
+        <p id="placeholder">暂无生成链接</p>
     </div>
 
-    <div class="sidebar">
-      <button id="generateBtn" onclick="generate()">生成并下载</button>
-      <button id="copyAuthorBtn" onclick="copyAuthor()">复制作者 B 站主页</button>
-    </div>
-  </div>
+    <script>
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const status = document.getElementById('status');
+            const linkContainer = document.getElementById('linkContainer');
+            const placeholder = document.getElementById('placeholder');
 
-  <div id="msg"></div>
+            if (!file) return;
 
-  <script>
-    // 获取/设置当前最大序号（保存在浏览器本地）
-    function getNextIndex() {
-      let index = parseInt(localStorage.getItem('zhifeijiyut_index') || '0', 10);
-      index += 1;
-      localStorage.setItem('zhifeijiyut_index', index);
-      return index;
-    }
+            status.textContent = "正在读取并转换...";
 
-    function generate() {
-      const code = document.getElementById('code').value.trim();
-      const msg = document.getElementById('msg');
+            // 使用 FileReader 读取文件内容
+            const reader = new FileReader();
 
-      if (!code) {
-        msg.textContent = '请输入代码再生成哦～';
-        msg.style.color = '#ff7777';
-        return;
-      }
+            reader.onload = function(event) {
+                // 获取文件原始二进制/文本数据
+                const content = event.target.result;
 
-      const index = getNextIndex();
-      let filename = 'zhifeijiyut';
-      if (index > 1) {
-        filename += `(${index-1})`;
-      }
-      filename += '.lua';
+                // 创建新的 Blob (TXT格式)
+                const blob = new Blob([content], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
 
-      // 使用 application/octet-stream 强制浏览器不自动加 .txt 后缀
-      const blob = new Blob([code], { type: 'application/octet-stream' });
-      const url = URL.createObjectURL(blob);
+                // 清除之前的旧链接
+                if(placeholder) placeholder.remove();
+                const existingLink = document.getElementById('resultLink');
+                if(existingLink) existingLink.remove();
 
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = filename;
-      a.style.display = 'none';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+                // 核心步骤：创造下载链接
+                const a = document.createElement('a');
+                a.id = "resultLink";
+                a.href = url;
+                a.download = file.name + ".txt"; // 在原文件名后加 .txt
+                a.textContent = ">> 点击这里下载生成的 " + file.name + ".txt <<";
+                a.style.color = "green";
+                a.style.fontWeight = "bold";
 
-      msg.textContent = `已下载：${filename}  •  大小：${(code.length / 1024).toFixed(1)} KB`;
-      msg.style.color = '#a0ffcc';
-    }
+                linkContainer.appendChild(a);
+                status.textContent = "转换成功！链接已生成。";
+            };
 
-    function copyAuthor() {
-      const link = 'https://b23.tv/4DZnv9H';
-      navigator.clipboard.writeText(link).then(() => {
-        const msg = document.getElementById('msg');
-        msg.textContent = '已复制作者 B 站主页：' + link;
-        msg.style.color = '#ff69b4';
-        setTimeout(() => { msg.textContent = ''; }, 5000);
-      }).catch(() => {
-        alert('复制失败，请手动复制：https://b23.tv/4DZnv9H');
-      });
-    }
-  </script>
+            reader.onerror = function() {
+                status.textContent = "读取出错，请重试。";
+            };
+
+            // 以文本形式读取（如果是图片/二进制文件，会转为原始编码串）
+            reader.readAsText(file);
+        });
+    </script>
 
 </body>
 </html>
