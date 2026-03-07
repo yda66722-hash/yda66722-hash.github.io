@@ -1,74 +1,24 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <title>文件转 TXT 链接工具</title>
-</head>
-<body>
+<button onclick="createShareLink()" class="link-btn" style="background:#3498db">创造分享链接</button>
 
-    <h1>文件转 TXT 链接生成器</h1>
-    <hr>
+<div id="linkDisplay" style="display:none; margin-top:10px; word-break:break-all; background:#1a1a2e; padding:10px; border:1px dashed #555;">
+    <p style="font-size:12px; color:#aaa;">生成的临时 TXT 访问地址：</p>
+    <code id="finalLink" style="color:#52eeff;"></code>
+</div>
 
-    <p>1. 选择一个文件（任何文件）：</p>
-    <input type="file" id="fileInput">
+<script>
+function createShareLink() {
+    const code = document.getElementById('code').value;
+    if(!code) { alert("没内容怎么变链接呀~"); return; }
+    
+    // 这里我们模拟生成一个指向当前页面的参数链接
+    // 实际原理：把代码压缩后放进 URL 参数里
+    const compressed = btoa(unescape(encodeURIComponent(code))).substring(0, 50); // 截取示例
+    const currentUrl = window.location.href.split('?')[0];
+    const shareUrl = currentUrl + "?data=" + compressed;
 
-    <p>2. 处理状态：<span id="status">等待上传...</span></p>
-
-    <hr>
-
-    <div id="linkContainer">
-        <p>3. 生成结果：</p>
-        <p id="placeholder">暂无生成链接</p>
-    </div>
-
-    <script>
-        document.getElementById('fileInput').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            const status = document.getElementById('status');
-            const linkContainer = document.getElementById('linkContainer');
-            const placeholder = document.getElementById('placeholder');
-
-            if (!file) return;
-
-            status.textContent = "正在读取并转换...";
-
-            // 使用 FileReader 读取文件内容
-            const reader = new FileReader();
-
-            reader.onload = function(event) {
-                // 获取文件原始二进制/文本数据
-                const content = event.target.result;
-
-                // 创建新的 Blob (TXT格式)
-                const blob = new Blob([content], { type: 'text/plain' });
-                const url = URL.createObjectURL(blob);
-
-                // 清除之前的旧链接
-                if(placeholder) placeholder.remove();
-                const existingLink = document.getElementById('resultLink');
-                if(existingLink) existingLink.remove();
-
-                // 核心步骤：创造下载链接
-                const a = document.createElement('a');
-                a.id = "resultLink";
-                a.href = url;
-                a.download = file.name + ".txt"; // 在原文件名后加 .txt
-                a.textContent = ">> 点击这里下载生成的 " + file.name + ".txt <<";
-                a.style.color = "green";
-                a.style.fontWeight = "bold";
-
-                linkContainer.appendChild(a);
-                status.textContent = "转换成功！链接已生成。";
-            };
-
-            reader.onerror = function() {
-                status.textContent = "读取出错，请重试。";
-            };
-
-            // 以文本形式读取（如果是图片/二进制文件，会转为原始编码串）
-            reader.readAsText(file);
-        });
-    </script>
-
-</body>
-</html>
+    document.getElementById('linkDisplay').style.display = 'block';
+    document.getElementById('finalLink').textContent = shareUrl;
+    
+    document.getElementById('msg').textContent = "链接创造成功！(已模拟生成)";
+}
+</script>
