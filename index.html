@@ -2,54 +2,67 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>代码转文本下载器</title>
+    <title>代码下载器 (增强版)</title>
     <style>
-        body { font-family: sans-serif; padding: 20px; line-height: 1.6; }
-        textarea { 
-            width: 100%; 
-            height: 300px; 
-            padding: 10px; 
-            border: 1px solid #ccc; 
-            border-radius: 4px; 
-            font-family: monospace; 
-            background-color: #f9f9f9;
-        }
-        .controls { margin-top: 15px; display: flex; gap: 10px; align-items: center; }
-        input[type="text"] { padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
-        button { 
-            padding: 10px 20px; 
-            background-color: #28a745; 
-            color: white; 
-            border: none; 
-            border-radius: 4px; 
-            cursor: pointer; 
-        }
-        button:hover { background-color: #218838; }
+        body { font-family: sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; }
+        textarea { width: 100%; height: 300px; margin-bottom: 10px; border: 2px solid #ddd; border-radius: 8px; padding: 10px; font-family: 'Courier New', monospace; }
+        .btn { background: #007AFF; color: white; border: none; padding: 12px 25px; border-radius: 6px; cursor: pointer; font-size: 16px; }
+        .btn:hover { background: #0056b3; }
+        #status { color: #666; font-size: 14px; margin-top: 10px; }
     </style>
 </head>
 <body>
 
-    <h2>代码下载器</h2>
-    <p>在下方框内输入代码，然后点击按钮下载为 .txt 文件：</p>
-
-    <textarea id="codeContent" placeholder="在此粘贴你的代码..."></textarea>
-
-    <div class="controls">
-        <input type="text" id="fileName" placeholder="文件名 (可选)" value="my_code">
-        <span>.txt</span>
-        <button onclick="downloadTxt()">立即下载</button>
+    <h3>请输入代码：</h3>
+    <textarea id="textContent" placeholder="把你想保存的内容粘贴到这里..."></textarea>
+    
+    <div>
+        <input type="text" id="fileName" value="my_code" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px;"> .txt
+        <button class="btn" onclick="saveAsTxt()">保存并下载</button>
     </div>
+    <div id="status"></div>
 
     <script>
-        function downloadTxt() {
-            // 1. 获取用户输入的内容和文件名
-            const content = document.getElementById('codeContent').value;
-            let name = document.getElementById('fileName').value || 'download';
-            
-            if (!content) {
-                alert("请输入一些代码再尝试下载哦！");
+        function saveAsTxt() {
+            const content = document.getElementById('textContent').value;
+            const name = document.getElementById('fileName').value + ".txt";
+            const status = document.getElementById('status');
+
+            if (!content.trim()) {
+                status.innerText = "❌ 请先输入内容！";
                 return;
             }
 
-            // 2. 创建一个 Blob 对象，模拟文件数据
-            const blob = new Blob([content], { type: 'text/plain' });
+            try {
+                // 创建 Blob
+                const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+                
+                // 方案 A: 使用 URL.createObjectURL (主流方式)
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = name;
+                
+                document.body.appendChild(a);
+                a.click();
+                
+                // 延迟释放，确保下载触发
+                setTimeout(() => {
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                    status.innerText = "✅ 下载请求已发送！";
+                }, 100);
+
+            } catch (err) {
+                // 方案 B: 备用方案 (Data URL)
+                status.innerText = "正在尝试备用下载方式...";
+                const link = document.createElement('a');
+                link.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(content);
+                link.download = name;
+                link.click();
+            }
+        }
+    </script>
+</body>
+</html>
