@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>zhiUI - zhiUI如何使用指南</title>
+    <title>zhiUI Framework - 开发者全手册</title>
     <style>
         :root {
             --bg: #0d0d0d;
@@ -13,6 +13,7 @@
             --text: #ffffff;
             --text-dim: #909090;
             --success: #34c759;
+            --border: #252525;
         }
 
         body {
@@ -24,7 +25,6 @@
             scroll-behavior: smooth;
         }
 
-        /* 顶部导航 */
         nav {
             position: fixed;
             top: 0; width: 100%;
@@ -50,28 +50,28 @@
         header h1 { font-size: 2.5rem; margin: 0; }
         header p { color: var(--text-dim); margin-top: 10px; }
 
-        /* 分类标题 */
         .section-header {
-            margin: 40px 0 20px;
-            font-size: 1.5rem;
+            margin: 50px 0 25px;
+            font-size: 1.6rem;
             display: flex;
             align-items: center;
             gap: 12px;
             color: var(--accent);
+            font-weight: bold;
         }
-        .section-header::before { content: ""; width: 4px; height: 24px; background: var(--accent); border-radius: 2px; }
+        .section-header::before { content: ""; width: 5px; height: 26px; background: var(--accent); border-radius: 3px; }
 
         /* 功能卡片 */
         .card {
             background: var(--card);
-            border: 1px solid #252525;
+            border: 1px solid var(--border);
             border-radius: 14px;
             padding: 25px;
             margin-bottom: 25px;
             position: relative;
             transition: 0.3s;
         }
-        .card:hover { border-color: var(--accent); box-shadow: 0 10px 30px rgba(0,122,255,0.1); }
+        .card:hover { border-color: var(--accent); transform: translateY(-3px); }
 
         .card-title { font-size: 1.2rem; font-weight: bold; margin-bottom: 8px; display: block; }
         .card-desc { color: var(--text-dim); font-size: 0.95rem; margin-bottom: 20px; display: block; }
@@ -93,7 +93,6 @@
             overflow-x: auto;
         }
 
-        /* 复制代码按钮 */
         .copy-btn {
             position: absolute;
             top: 12px;
@@ -110,33 +109,49 @@
         .copy-btn:hover { background: var(--accent); border-color: var(--accent); }
         .copy-btn.active { background: var(--success); border-color: var(--success); }
 
+        /* 说明列表说明 */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .info-item {
+            background: #121212;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #222;
+        }
+        .info-item h4 { margin: 0 0 10px 0; color: var(--accent); }
+        .info-item p { margin: 0; font-size: 0.9rem; color: var(--text-dim); }
+
         /* 语法高亮 */
         .key { color: #569cd6; }
         .func { color: #dcdcaa; }
         .str { color: #ce9178; }
         .comment { color: #6a9955; }
 
-        footer { text-align: center; padding: 40px; color: #444; border-top: 1px solid #222; }
+        footer { text-align: center; padding: 60px; color: #444; border-top: 1px solid #222; font-size: 14px; }
     </style>
 </head>
 <body>
 
     <nav>
-        <div class="logo">zhiUI FRAMEWORK</div>
-        <div style="color: var(--text-dim); font-size: 14px;">Documentation v1.0.2</div>
+        <div class="logo">zhiUI SYSTEM</div>
+        <div style="color: var(--text-dim); font-size: 14px;">Stable Build v1.0.2</div>
     </nav>
 
     <div class="container">
         <header>
             <h1>全功能 API 参考手册</h1>
-            <p>基于核心源码的完整组件调用指南</p>
+            <p>为性能与审美优化的 Roblox 现代化 UI 解决方案</p>
         </header>
 
-        <div class="section-header">1. 引用与初始化</div>
+        <div class="section-header">1. 脚本功能教学</div>
         
         <div class="card">
             <span class="card-title">远程引用 (Loadstring)</span>
-            <span class="card-desc">通过 GitHub 链接直接在脚本中加载 UI 库。</span>
+            <span class="card-desc">使用此代码从 GitHub 自动同步最新版 zhiUI。</span>
             <div class="code-wrapper">
                 <button class="copy-btn" onclick="copyCode(this)">复制</button>
 <pre><code><span class="key">local</span> zhiUI = <span class="func">loadstring</span>(game:<span class="func">HttpGet</span>(<span class="str">"https://raw.githubusercontent.com/yda66722-hash/zhiUI/refs/heads/main/zhiUI"</span>))()</code></pre>
@@ -144,62 +159,19 @@
         </div>
 
         <div class="card">
-            <span class="card-title">CreateWindow (创建窗口)</span>
-            <span class="card-desc">初始化主窗体，包含自动清理旧 UI 和移动端适配功能。</span>
+            <span class="card-title">AddToggle (开关功能)</span>
+            <span class="card-desc">用于控制持续运行的逻辑（如自动攻击）。</span>
             <div class="code-wrapper">
                 <button class="copy-btn" onclick="copyCode(this)">复制</button>
-<pre><code><span class="key">local</span> Win = zhiUI:<span class="func">CreateWindow</span>({
-    Title = <span class="str">"我的脚本面板"</span>
-})</code></pre>
-            </div>
-        </div>
-
-        <div class="section-header">2. 功能组件 (Elements)</div>
-
-        <div class="card">
-            <span class="card-title">Notify (通知系统)</span>
-            <span class="card-desc">在屏幕右下角弹出果冻动画样式的消息提醒。</span>
-            <div class="code-wrapper">
-                <button class="copy-btn" onclick="copyCode(this)">复制</button>
-<pre><code><span class="comment">-- 标题, 内容, 持续秒数</span>
-zhiUI:<span class="func">Notify</span>(<span class="str">"系统提示"</span>, <span class="str">"脚本运行成功"</span>, <span class="str">5</span>)</code></pre>
-            </div>
-        </div>
-
-        <div class="card">
-            <span class="card-title">AddTab (添加分页)</span>
-            <span class="card-desc">在侧边栏创建一个分类页。后续组件需添加在此对象下。</span>
-            <div class="code-wrapper">
-                <button class="copy-btn" onclick="copyCode(this)">复制</button>
-<pre><code><span class="key">local</span> Tab = Win:<span class="func">AddTab</span>(<span class="str">"战斗功能"</span>)</code></pre>
-            </div>
-        </div>
-
-        <div class="card">
-            <span class="card-title">AddButton (基础按钮)</span>
-            <span class="card-desc">带有物理挤压效果（JellyClick）的基础交互组件。</span>
-            <div class="code-wrapper">
-                <button class="copy-btn" onclick="copyCode(this)">复制</button>
-<pre><code>Tab:<span class="func">AddButton</span>(<span class="str">"传送至終点"</span>, <span class="key">function</span>()
-    <span class="func">print</span>(<span class="str">"正在传送..."</span>)
+<pre><code>Tab:<span class="func">AddToggle</span>(<span class="str">"自动刷钱"</span>, <span class="key">false</span>, <span class="key">function</span>(state)
+    <span class="func">print</span>(<span class="str">"当前状态: "</span>, state)
 <span class="key">end</span>)</code></pre>
             </div>
         </div>
 
         <div class="card">
-            <span class="card-title">AddToggle (开关)</span>
-            <span class="card-desc">iOS 风格滑动开关，用于控制功能开启/关闭。</span>
-            <div class="code-wrapper">
-                <button class="copy-btn" onclick="copyCode(this)">复制</button>
-<pre><code>Tab:<span class="func">AddToggle</span>(<span class="str">"自动挂机"</span>, <span class="key">false</span>, <span class="key">function</span>(state)
-    <span class="func">print</span>(<span class="str">"状态: "</span>, state)
-<span class="key">end</span>)</code></pre>
-            </div>
-        </div>
-
-        <div class="card">
-            <span class="card-title">AddSlider (滑动条)</span>
-            <span class="card-desc">精确控制数值范围，如速度、高度或重力。</span>
+            <span class="card-title">AddSlider (数值调节)</span>
+            <span class="card-desc">通过拖拽调节数值大小。</span>
             <div class="code-wrapper">
                 <button class="copy-btn" onclick="copyCode(this)">复制</button>
 <pre><code>Tab:<span class="func">AddSlider</span>(<span class="str">"步行速度"</span>, <span class="str">16</span>, <span class="str">200</span>, <span class="str">16</span>, <span class="key">function</span>(v)
@@ -208,44 +180,43 @@ zhiUI:<span class="func">Notify</span>(<span class="str">"系统提示"</span>, 
             </div>
         </div>
 
-        <div class="card">
-            <span class="card-title">AddDropdown (下拉框)</span>
-            <span class="card-desc">折叠式选项菜单，支持动态展开与收起。</span>
-            <div class="code-wrapper">
-                <button class="copy-btn" onclick="copyCode(this)">复制</button>
-<pre><code>Tab:<span class="func">AddDropdown</span>(<span class="str">"选择地图"</span>, {<span class="str">"森林"</span>, <span class="str">"沙漠"</span>, <span class="str">"雪山"</span>}, <span class="key">function</span>(val)
-    <span class="func">print</span>(<span class="str">"已选择: "</span> .. val)
-<span class="key">end</span>)</code></pre>
-            </div>
-        </div>
-
-        <div class="card">
-            <span class="card-title">AddInput (文本输入框)</span>
-            <span class="card-desc">获取用户手动输入的文本，支持占位符提示。</span>
-            <div class="code-wrapper">
-                <button class="copy-btn" onclick="copyCode(this)">复制</button>
-<pre><code>Tab:<span class="func">AddInput</span>(<span class="str">"玩家ID"</span>, <span class="str">"输入名称..."</span>, <span class="key">function</span>(text)
-    <span class="func">print</span>(<span class="str">"目标锁定: "</span> .. text)
-<span class="key">end</span>)</code></pre>
-            </div>
-        </div>
-
-        <div class="section-header">3. 辅助组件</div>
+        <div class="section-header">2. 核心技术说明</div>
+        <p style="color: var(--text-dim);">除了上述基础组件，zhiUI 还在底层实现了多项优化技术，确保脚本运行的稳定性与隐蔽性。</p>
         
-        <div class="card">
-            <span class="card-title">Label & Divider (文本与分割)</span>
-            <span class="card-desc">用于显示提示文字（可动态更新）及插入强调色分割线。</span>
-            <div class="code-wrapper">
-                <button class="copy-btn" onclick="copyCode(this)">复制</button>
-<pre><code><span class="key">local</span> Info = Tab:<span class="func">AddLabel</span>(<span class="str">"初始化中..."</span>)
-Info:<span class="func">Set</span>(<span class="str">"连接服务器成功"</span>) <span class="comment">-- 动态更新</span>
-Tab:<span class="func">AddDivider</span>() <span class="comment">-- 分割线</span></code></pre>
+        <div class="info-grid">
+            <div class="info-item">
+                <h4>🛡️ 反截图与反检测</h4>
+                <p>自动优先选用 gethui() 环境。这种方式能将 UI 隐藏在游戏的常规渲染层之外，有效绕过部分截图类反作弊检测。</p>
             </div>
+            <div class="info-item">
+                <h4>📱 移动端自适应</h4>
+                <p>内置 UIScale 监听器。当用户在手机端运行脚本时，UI 比例会自动缩放 75%，防止按钮太大导致无法操作游戏。</p>
+            </div>
+            <div class="info-item">
+                <h4>⚡ 物理果冻动画</h4>
+                <p>所有交互均基于 TweenService 的 Elastic 与 Back 算法，提供极致的点击反馈感，不再是死板的弹出消失。</p>
+            </div>
+            <div class="info-item">
+                <h4>🧹 自动垃圾回收</h4>
+                <p>启动时会自动清理残留的 zhiUI 实例。哪怕你的脚本崩溃了，下次运行也会自动重置环境，不会造成卡顿。</p>
+            </div>
+        </div>
+
+        <div class="section-header">3. 常见问题 (FAQ)</div>
+        <div class="card">
+            <h4 style="margin: 0 0 10px 0;">Q: 为什么 UI 没有显示？</h4>
+            <p style="font-size: 0.9rem; color: var(--text-dim);">A: 请检查你的执行器（Executor）是否支持 game:HttpGet。如果是内部脚本，请确保 CoreGui 权限已开启。</p>
+            
+            <h4 style="margin: 20px 0 10px 0;">Q: 如何修改全局颜色？</h4>
+            <p style="font-size: 0.9rem; color: var(--text-dim);">A: 源码顶部的 Theme 表中含有 Accent 变量。你可以将其修改为你喜欢的任意 Color3 数值，所有组件将自动同步颜色。</p>
+            
+            <h4 style="margin: 20px 0 10px 0;">Q: 最小化球找不到了怎么办？</h4>
+            <p style="font-size: 0.9rem; color: var(--text-dim);">A: 最小化球默认出现在屏幕正上方。如果被遮挡，重新运行脚本即可，自动清理功能会重置它的位置。</p>
         </div>
 
         <footer>
-            zhiUI Documentation © 2026<br>
-            Designed for Roblox Developers
+            zhiUI Framework © 2026<br>
+            由 yda66722-hash 提供技术支持 | 为 Roblox 脚本而生
         </footer>
     </div>
 
@@ -253,12 +224,10 @@ Tab:<span class="func">AddDivider</span>() <span class="comment">-- 分割线</s
         function copyCode(btn) {
             const pre = btn.nextElementSibling;
             const text = pre.innerText;
-            
             navigator.clipboard.writeText(text).then(() => {
                 const originalText = btn.innerText;
                 btn.innerText = "已复制!";
                 btn.classList.add("active");
-                
                 setTimeout(() => {
                     btn.innerText = originalText;
                     btn.classList.remove("active");
