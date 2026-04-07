@@ -3,164 +3,210 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>zhiUI - 现代化学脚本 UI 框架</title>
+    <title>zhiUI - 功能百科与开发指南</title>
     <style>
         :root {
-            --bg: #0f0f0f;
-            --card-bg: #1a1a1a;
+            --bg: #0b0b0b;
+            --card: #161616;
             --accent: #007aff;
-            --text: #ffffff;
-            --text-dim: #a0a0a0;
+            --code-bg: #000000;
+            --text: #ececec;
+            --text-dim: #999;
         }
 
         body {
             background-color: var(--bg);
             color: var(--text);
-            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            font-family: 'Segoe UI', system-ui, sans-serif;
             margin: 0;
-            line-height: 1.6;
+            padding: 0;
+            scroll-behavior: smooth;
         }
 
-        /* 顶部横幅 */
-        header {
-            height: 400px;
+        /* 导航栏 */
+        nav {
+            position: sticky;
+            top: 0;
+            background: rgba(11, 11, 11, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #222;
+            padding: 15px 50px;
+            z-index: 100;
             display: flex;
-            flex-direction: column;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
-            background: linear-gradient(180deg, #1a1a1a 0%, #0f0f0f 100%);
-            border-bottom: 1px solid #333;
-            text-align: center;
         }
 
-        .badge {
-            background: var(--accent);
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
+        .logo { font-weight: bold; font-size: 1.2rem; color: var(--accent); }
 
-        h1 { font-size: 3rem; margin: 0; letter-spacing: -1px; }
-        .subtitle { color: var(--text-dim); font-size: 1.2rem; margin-top: 10px; }
-
-        /* 内容容器 */
+        /* 内容布局 */
         .container {
-            max-width: 1000px;
-            margin: -50px auto 100px;
+            max-width: 900px;
+            margin: 40px auto;
             padding: 0 20px;
         }
 
-        /* 功能网格 */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
+        .section-title {
+            border-left: 4px solid var(--accent);
+            padding-left: 15px;
+            margin: 50px 0 25px;
+            font-size: 1.5rem;
         }
 
-        .card {
-            background: var(--card-bg);
-            padding: 30px;
-            border-radius: 16px;
-            border: 1px solid #2a2a2a;
-            transition: 0.3s;
+        /* 功能卡片 */
+        .feature-card {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid #252525;
         }
 
-        .card:hover {
-            transform: translateY(-5px);
-            border-color: var(--accent);
-        }
-
-        .card h3 {
-            color: var(--accent);
-            margin-top: 0;
+        .feature-header {
             display: flex;
             align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
         }
 
-        .card h3::before {
-            content: "✦";
-            margin-right: 10px;
+        .icon {
+            background: var(--accent);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: bold;
         }
 
-        /* 代码块样式 */
-        pre {
-            background: #000;
-            padding: 20px;
-            border-radius: 10px;
-            overflow-x: auto;
+        .desc { color: var(--text-dim); margin-bottom: 20px; font-size: 0.95rem; }
+
+        /* 代码区 */
+        .code-box {
+            background: var(--code-bg);
+            padding: 15px;
+            border-radius: 8px;
             border: 1px solid #333;
-            color: #dcdcdc;
+            position: relative;
         }
 
-        .footer {
-            text-align: center;
-            padding: 50px;
-            color: var(--text-dim);
-            font-size: 14px;
-        }
+        pre { margin: 0; font-family: 'Consolas', monospace; font-size: 0.9rem; color: #80cbc4; overflow-x: auto; }
+        .comment { color: #546e7a; font-style: italic; }
+        .func { color: #f77669; }
+        .str { color: #c3e88d; }
 
-        /* 响应式 */
-        @media (max-width: 600px) {
-            h1 { font-size: 2rem; }
-        }
+        footer { text-align: center; padding: 40px; color: #444; border-top: 1px solid #222; }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="badge">V1.0.2 STABLE</div>
-        <h1>zhiUI Hub</h1>
-        <p class="subtitle">为性能与审美而生的 Roblox 现代化 UI 框架</p>
-    </header>
+    <nav>
+        <div class="logo">zhiUI Framework</div>
+        <div style="font-size: 0.9rem; color: var(--text-dim);">版本: 1.0.2 Stable</div>
+    </nav>
 
     <div class="container">
-        <section class="grid">
-            <div class="card">
-                <h3>响应式缩放</h3>
-                <p>内置移动端自适应逻辑。当检测到屏幕宽度小于 800px 时，UI 自动按 0.75x 比例缩小，确保在手机端不会遮挡游戏视野。</p>
-            </div>
-            <div class="card">
-                <h3>果冻动画反馈</h3>
-                <p>基于物理算法的弹性动画（Elastic & Back）。无论是 Tab 切换还是按钮点击，都能提供极其丝滑的视觉反馈。</p>
-            </div>
-            <div class="card">
-                <h3>智能管理</h3>
-                <p>支持一键最小化为“悬浮球”，支持自动清理旧版 UI 防止残留，支持通过 gethui() 实现反截图检测。</p>
-            </div>
-        </section>
+        <h1>功能百科与调用示例</h1>
+        <p style="color: var(--text-dim);">以下是 zhiUI 提供的所有组件及其对应的代码调用方式。</p>
 
-        <h2 style="margin-top: 60px; border-left: 4px solid var(--accent); padding-left: 15px;">全功能组件清单</h2>
-        <div class="grid">
-            <div class="card">
-                <p><strong>🔘 Button</strong>：具备物理挤压感的动作按钮。</p>
-                <p><strong>☑️ Toggle</strong>：仿 iOS 滑动开关，带平滑变色。</p>
-                <p><strong>📏 Slider</strong>：高精度数值滑动条，支持范围自定义。</p>
+        <div class="section-title">全局通知系统</div>
+        <div class="feature-card">
+            <div class="feature-header">
+                <span class="icon">GLOBAL</span>
+                <strong>Notify (弹窗通知)</strong>
             </div>
-            <div class="card">
-                <p><strong>📜 Dropdown</strong>：动态高度折叠列表，支持长选项。</p>
-                <p><strong>⌨️ Input</strong>：美化的文本输入框，支持失去焦点回调。</p>
-                <p><strong>🔔 Notify</strong>：右下角全局通知系统，支持标题与描述。</p>
-            </div>
-            <div class="card">
-                <p><strong>📝 Label</strong>：支持代码动态更新内容的文本标签。</p>
-                <p><strong>➖ Divider</strong>：强调色风格的分层分割线。</p>
-                <p><strong>📂 Tab</strong>：侧边栏分类系统，支持自动画布高度调整。</p>
+            <p class="desc">在屏幕右下角弹出信息提示，适用于脚本启动、任务完成或报错提醒。</p>
+            <div class="code-box">
+<pre><code><span class="comment">-- 参数：标题, 内容, 持续秒数</span>
+zhiUI:<span class="func">Notify</span>(<span class="str">"系统"</span>, <span class="str">"脚本加载成功！"</span>, <span class="str">5</span>)</code></pre>
             </div>
         </div>
 
-        <h2 style="margin-top: 60px; border-left: 4px solid var(--accent); padding-left: 15px;">开发者引用</h2>
-        <pre><code>-- 在你的脚本中复制此代码即可调用
-local zhiUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/yda66722-hash/zhiUI/refs/heads/main/zhiUI"))()
+        <div class="section-title">基础交互组件</div>
+        <div class="feature-card">
+            <div class="feature-header">
+                <span class="icon">ELEMENT</span>
+                <strong>AddButton (按钮)</strong>
+            </div>
+            <p class="desc">最常用的组件，带有果冻回弹点击动效，用于执行一次性动作。</p>
+            <div class="code-box">
+<pre><code>Tab:<span class="func">AddButton</span>(<span class="str">"执行传送"</span>, <span class="func">function</span>()
+    <span class="func">print</span>(<span class="str">"玩家已传送"</span>)
+<span class="func">end</span>)</code></pre>
+            </div>
+        </div>
 
-local Win = zhiUI:CreateWindow({Title = "我的脚本窗口"})
-local Tab = Win:AddTab("主要功能")</code></pre>
+        <div class="feature-card">
+            <div class="feature-header">
+                <span class="icon">ELEMENT</span>
+                <strong>AddToggle (开关)</strong>
+            </div>
+            <p class="desc">iOS 风格的滑动开关，用于控制开启或关闭循环功能（如自动挂机）。</p>
+            <div class="code-box">
+<pre><code>Tab:<span class="func">AddToggle</span>(<span class="str">"自动刷金币"</span>, <span class="str">false</span>, <span class="func">function</span>(state)
+    <span class="func">print</span>(<span class="str">"当前状态："</span>, state) <span class="comment">-- state 为布尔值</span>
+<span class="func">end</span>)</code></pre>
+            </div>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-header">
+                <span class="icon">ELEMENT</span>
+                <strong>AddSlider (滑动条)</strong>
+            </div>
+            <p class="desc">调节数值的利器。支持自定义步长范围，并带有数值实时显示。</p>
+            <div class="code-box">
+<pre><code><span class="comment">-- 标题, 最小值, 最大值, 默认值, 回调</span>
+Tab:<span class="func">AddSlider</span>(<span class="str">"步行速度"</span>, <span class="str">16</span>, <span class="str">200</span>, <span class="str">16</span>, <span class="func">function</span>(v)
+    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = v
+<span class="func">end</span>)</code></pre>
+            </div>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-header">
+                <span class="icon">ELEMENT</span>
+                <strong>AddDropdown (下拉框)</strong>
+            </div>
+            <p class="desc">节省空间的选项菜单，点击展开，选中后自动折叠并回传选项内容。</p>
+            <div class="code-box">
+<pre><code>Tab:<span class="func">AddDropdown</span>(<span class="str">"选择模式"</span>, {<span class="str">"近战"</span>, <span class="str">"远程"</span>, <span class="str">"全能"</span>}, <span class="func">function</span>(val)
+    <span class="func">print</span>(<span class="str">"已切换至："</span> .. val)
+<span class="func">end</span>)</code></pre>
+            </div>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-header">
+                <span class="icon">ELEMENT</span>
+                <strong>AddInput (输入框)</strong>
+            </div>
+            <p class="desc">允许用户手动输入文本，常用于输入特定的 ID、消息内容或密钥。</p>
+            <div class="code-box">
+<pre><code>Tab:<span class="func">AddInput</span>(<span class="str">"目标玩家"</span>, <span class="str">"输入玩家ID..."</span>, <span class="func">function</span>(text)
+    <span class="func">print</span>(<span class="str">"已锁定玩家："</span> .. text)
+<span class="func">end</span>)</code></pre>
+            </div>
+        </div>
+
+        <div class="section-title">布局辅助</div>
+        <div class="feature-card">
+            <div class="feature-header">
+                <span class="icon">UI</span>
+                <strong>AddLabel & AddDivider</strong>
+            </div>
+            <p class="desc">Label 用于显示提示文本（可动态更新），Divider 用于插入强调色分割线。</p>
+            <div class="code-box">
+<pre><code><span class="func">local</span> myLabel = Tab:<span class="func">AddLabel</span>(<span class="str">"作者: zhi"</span>)
+myLabel:<span class="func">Set</span>(<span class="str">"状态: 运行正常"</span>) <span class="comment">-- 动态更新文本</span>
+Tab:<span class="func">AddDivider</span>() <span class="comment">-- 插入横线</span></code></pre>
+            </div>
+        </div>
     </div>
 
-    <div class="footer">
-        © 2026 zhiUI Framework. Powered by yda66722-hash.
-    </div>
+    <footer>
+        zhiUI Framework - 为 Roblox 开发者量身定制<br>
+        2026 Documentation
+    </footer>
 
 </body>
 </html>
