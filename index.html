@@ -3,234 +3,239 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>zhiUI - 最简单的UI</title>
+    <title>zhiUI Framework - 完整 API 官方文档</title>
     <style>
         :root {
-            --bg: #0d0d0d;
-            --card: #181818;
+            --bg: #0a0a0a;
+            --card: #161616;
             --accent: #007aff;
-            --code-bg: #000000;
+            --code-bg: #000;
             --text: #ffffff;
-            --text-dim: #909090;
-            --success: #34c759;
-            --border: #252525;
+            --text-dim: #888;
+            --success: #28c740;
         }
 
         body {
             background-color: var(--bg);
             color: var(--text);
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            margin: 0;
-            line-height: 1.6;
-            scroll-behavior: smooth;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            margin: 0; padding: 0; line-height: 1.6;
         }
 
-        nav {
+        /* 侧边快速导航 */
+        .nav-sidebar {
             position: fixed;
-            top: 0; width: 100%;
-            background: rgba(13, 13, 13, 0.8);
-            backdrop-filter: blur(15px);
-            border-bottom: 1px solid #222;
-            display: flex;
-            justify-content: space-between;
-            padding: 15px 40px;
-            box-sizing: border-box;
-            z-index: 1000;
+            left: 20px; top: 100px;
+            width: 150px;
+            display: flex; flex-direction: column; gap: 10px;
+        }
+        .nav-link { color: var(--text-dim); text-decoration: none; font-size: 13px; transition: 0.3s; }
+        .nav-link:hover { color: var(--accent); }
+
+        .container { max-width: 900px; margin: 80px auto; padding: 0 40px; }
+
+        header { border-bottom: 1px solid #222; padding-bottom: 30px; margin-bottom: 50px; }
+        header h1 { font-size: 2.8rem; margin: 0; color: var(--accent); }
+
+        .section-title {
+            font-size: 1.6rem; margin: 60px 0 25px;
+            padding-bottom: 10px; border-bottom: 2px solid #222;
+            display: flex; align-items: center; gap: 10px;
         }
 
-        .logo { font-weight: 800; color: var(--accent); letter-spacing: 1px; }
-
-        .container {
-            max-width: 900px;
-            margin: 100px auto 60px;
-            padding: 0 20px;
-        }
-
-        header { text-align: center; margin-bottom: 50px; }
-        header h1 { font-size: 2.5rem; margin: 0; }
-        header p { color: var(--text-dim); margin-top: 10px; }
-
-        .section-header {
-            margin: 50px 0 25px;
-            font-size: 1.6rem;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: var(--accent);
-            font-weight: bold;
-        }
-        .section-header::before { content: ""; width: 5px; height: 26px; background: var(--accent); border-radius: 3px; }
-
-        /* 功能卡片 */
-        .card {
+        /* 功能块卡片 */
+        .api-card {
             background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 25px;
-            margin-bottom: 25px;
-            position: relative;
-            transition: 0.3s;
-        }
-        .card:hover { border-color: var(--accent); transform: translateY(-3px); }
-
-        .card-title { font-size: 1.2rem; font-weight: bold; margin-bottom: 8px; display: block; }
-        .card-desc { color: var(--text-dim); font-size: 0.95rem; margin-bottom: 20px; display: block; }
-
-        /* 代码区域 */
-        .code-wrapper {
-            position: relative;
-            background: var(--code-bg);
-            border-radius: 10px;
-            border: 1px solid #333;
-        }
-
-        pre {
-            margin: 0;
-            padding: 20px;
-            font-family: 'Consolas', monospace;
-            font-size: 13px;
-            color: #d4d4d4;
-            overflow-x: auto;
-        }
-
-        .copy-btn {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #fff;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 12px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .copy-btn:hover { background: var(--accent); border-color: var(--accent); }
-        .copy-btn.active { background: var(--success); border-color: var(--success); }
-
-        /* 说明列表说明 */
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-        .info-item {
-            background: #121212;
-            padding: 20px;
             border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 35px;
             border: 1px solid #222;
         }
-        .info-item h4 { margin: 0 0 10px 0; color: var(--accent); }
-        .info-item p { margin: 0; font-size: 0.9rem; color: var(--text-dim); }
+        .api-card h3 { margin-top: 0; color: var(--accent); font-family: monospace; }
+        .api-card p { font-size: 0.95rem; color: #ccc; }
 
-        /* 语法高亮 */
-        .key { color: #569cd6; }
-        .func { color: #dcdcaa; }
-        .str { color: #ce9178; }
-        .comment { color: #6a9955; }
+        /* 代码区 */
+        .code-container {
+            position: relative;
+            background: var(--code-bg);
+            border-radius: 8px;
+            border: 1px solid #333;
+            margin-top: 15px;
+        }
+        pre { margin: 0; padding: 20px; font-size: 13px; color: #abb2bf; overflow-x: auto; }
+        
+        .copy-btn {
+            position: absolute; right: 10px; top: 10px;
+            background: rgba(255,255,255,0.1); border: none; color: #fff;
+            padding: 5px 12px; border-radius: 5px; cursor: pointer; font-size: 12px;
+        }
+        .copy-btn:hover { background: var(--accent); }
 
-        footer { text-align: center; padding: 60px; color: #444; border-top: 1px solid #222; font-size: 14px; }
+        /* 说明板 */
+        .info-panel {
+            background: rgba(0, 122, 255, 0.05);
+            border-left: 4px solid var(--accent);
+            padding: 20px; margin: 40px 0; border-radius: 0 8px 8px 0;
+        }
+
+        .tag { background: #333; padding: 2px 8px; border-radius: 4px; font-size: 11px; vertical-align: middle; }
+
+        footer { text-align: center; padding: 80px 0; color: #444; font-size: 14px; }
+
+        @media (max-width: 1000px) { .nav-sidebar { display: none; } }
     </style>
 </head>
 <body>
 
-    <nav>
-        <div class="logo">zhiUI SYSTEM</div>
-        <div style="color: var(--text-dim); font-size: 14px;">Stable Build v1.0.2</div>
-    </nav>
+    <div class="nav-sidebar">
+        <a href="#init" class="nav-link">1. 初始化</a>
+        <a href="#notify" class="nav-link">2. 通知消息</a>
+        <a href="#tab" class="nav-link">3. 分页管理</a>
+        <a href="#elements" class="nav-link">4. 基础组件</a>
+        <a href="#adv" class="nav-link">5. 进阶说明</a>
+    </div>
 
     <div class="container">
         <header>
-            <h1>全功能 API 参考手册</h1>
-            <p>为性能与审美优化的 Roblox 现代化 UI 解决方案</p>
+            <h1>zhiUI 全功能百科</h1>
+            <p>本文档基于底层源码，涵盖所有 API 接口与交互逻辑。</p>
         </header>
 
-        <div class="section-header">1. 脚本功能教学</div>
+        <h2 class="section-title" id="init">📡 第一阶段：引用与创建</h2>
         
-        <div class="card">
-            <span class="card-title">远程引用 (Loadstring)</span>
-            <span class="card-desc">使用此代码从 GitHub 自动同步最新版 zhiUI。</span>
-            <div class="code-wrapper">
-                <button class="copy-btn" onclick="copyCode(this)">复制</button>
-<pre><code><span class="key">local</span> zhiUI = <span class="func">loadstring</span>(game:<span class="func">HttpGet</span>(<span class="str">"https://raw.githubusercontent.com/yda66722-hash/zhiUI/refs/heads/main/zhiUI"</span>))()</code></pre>
+        <div class="api-card">
+            <h3>zhiUI:CreateWindow(config) <span class="tag">必选</span></h3>
+            <p>启动框架的核心。它会自动执行：UI 清理、环境检测（gethui/CoreGui）、移动端自适应（UIScale）以及主窗口拖拽初始化。</p>
+            <div class="code-container">
+                <button class="copy-btn" onclick="copy(this)">复制</button>
+<pre><code>local Window = zhiUI:CreateWindow({
+    Title = "zhiUI Premium Hub" -- 你的标题
+})</code></pre>
             </div>
         </div>
 
-        <div class="card">
-            <span class="card-title">AddToggle (开关功能)</span>
-            <span class="card-desc">用于控制持续运行的逻辑（如自动攻击）。</span>
-            <div class="code-wrapper">
-                <button class="copy-btn" onclick="copyCode(this)">复制</button>
-<pre><code>Tab:<span class="func">AddToggle</span>(<span class="str">"自动刷钱"</span>, <span class="key">false</span>, <span class="key">function</span>(state)
-    <span class="func">print</span>(<span class="str">"当前状态: "</span>, state)
-<span class="key">end</span>)</code></pre>
+        <h2 class="section-title" id="notify">🔔 第二阶段：反馈系统</h2>
+        
+        <div class="api-card">
+            <h3>zhiUI:Notify(title, desc, duration)</h3>
+            <p>在屏幕右下角呼出一个果冻动效弹窗。内容过长时会自动折叠文本（TextWrapped）。</p>
+            <div class="code-container">
+                <button class="copy-btn" onclick="copy(this)">复制</button>
+<pre><code>zhiUI:Notify("系统公告", "脚本已成功加载，祝你游戏愉快！", 5)</code></pre>
             </div>
         </div>
 
-        <div class="card">
-            <span class="card-title">AddSlider (数值调节)</span>
-            <span class="card-desc">通过拖拽调节数值大小。</span>
-            <div class="code-wrapper">
-                <button class="copy-btn" onclick="copyCode(this)">复制</button>
-<pre><code>Tab:<span class="func">AddSlider</span>(<span class="str">"步行速度"</span>, <span class="str">16</span>, <span class="str">200</span>, <span class="str">16</span>, <span class="key">function</span>(v)
+        <h2 class="section-title" id="tab">📂 第三阶段：结构定义</h2>
+        
+        <div class="api-card">
+            <h3>Window:AddTab(name)</h3>
+            <p>创建侧边栏分类。每个 Tab 按钮都带有 <b>JellyTab</b> 悬停缩放动画。点击时自动处理 CanvasSize 滑动区域。</p>
+            <div class="code-container">
+                <button class="copy-btn" onclick="copy(this)">复制</button>
+<pre><code>local MainTab = Window:AddTab("主要功能")
+local SetTab = Window:AddTab("设置选项")</code></pre>
+            </div>
+        </div>
+
+        <h2 class="section-title" id="elements">🛠️ 第四阶段：全量组件 (All Elements)</h2>
+
+        <div class="api-card">
+            <h3>Tab:AddButton(text, callback)</h3>
+            <p>基础点击组件。内置 <b>JellyClick</b> 物理弹性反馈，手感极佳。</p>
+            <div class="code-container">
+                <button class="copy-btn" onclick="copy(this)">复制</button>
+<pre><code>MainTab:AddButton("重置传送点", function()
+    print("触发动作")
+end)</code></pre>
+            </div>
+        </div>
+
+        <div class="api-card">
+            <h3>Tab:AddToggle(text, default, callback)</h3>
+            <p>逻辑开关。状态改变时，滑动圆点会执行 <b>Elastic</b> 动画，并根据状态切换强调色。</p>
+            <div class="code-container">
+                <button class="copy-btn" onclick="copy(this)">复制</button>
+<pre><code>MainTab:AddToggle("自动攻击", false, function(state)
+    _G.AutoAttack = state
+end)</code></pre>
+            </div>
+        </div>
+
+        <div class="api-card">
+            <h3>Tab:AddSlider(text, min, max, default, callback)</h3>
+            <p>数值调节器。支持实时滑动更新数值，常用于步行速度或重力调节。</p>
+            <div class="code-container">
+                <button class="copy-btn" onclick="copy(this)">复制</button>
+<pre><code>MainTab:AddSlider("移动速度", 16, 500, 16, function(v)
     game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = v
-<span class="key">end</span>)</code></pre>
+end)</code></pre>
             </div>
         </div>
 
-        <div class="section-header">2. 核心技术说明</div>
-        <p style="color: var(--text-dim);">除了上述基础组件，zhiUI 还在底层实现了多项优化技术，确保脚本运行的稳定性与隐蔽性。</p>
-        
-        <div class="info-grid">
-            <div class="info-item">
-                <h4>🛡️ 反截图与反检测</h4>
-                <p>自动优先选用 gethui() 环境。这种方式能将 UI 隐藏在游戏的常规渲染层之外，有效绕过部分截图类反作弊检测。</p>
-            </div>
-            <div class="info-item">
-                <h4>📱 移动端自适应</h4>
-                <p>内置 UIScale 监听器。当用户在手机端运行脚本时，UI 比例会自动缩放 75%，防止按钮太大导致无法操作游戏。</p>
-            </div>
-            <div class="info-item">
-                <h4>⚡ 物理果冻动画</h4>
-                <p>所有交互均基于 TweenService 的 Elastic 与 Back 算法，提供极致的点击反馈感，不再是死板的弹出消失。</p>
-            </div>
-            <div class="info-item">
-                <h4>🧹 自动垃圾回收</h4>
-                <p>启动时会自动清理残留的 zhiUI 实例。哪怕你的脚本崩溃了，下次运行也会自动重置环境，不会造成卡顿。</p>
+        <div class="api-card">
+            <h3>Tab:AddDropdown(text, list, callback)</h3>
+            <p>折叠选择框。动态计算高度，点击选项后自动收回并更新主显示文本。</p>
+            <div class="code-container">
+                <button class="copy-btn" onclick="copy(this)">复制</button>
+<pre><code>MainTab:AddDropdown("选择模式", {"高效率", "平衡", "低占用"}, function(val)
+    print("当前模式：" .. val)
+end)</code></pre>
             </div>
         </div>
 
-        <div class="section-header">3. 常见问题 (FAQ)</div>
-        <div class="card">
-            <h4 style="margin: 0 0 10px 0;">Q: 为什么 UI 没有显示？</h4>
-            <p style="font-size: 0.9rem; color: var(--text-dim);">A: 请检查你的执行器（Executor）是否支持 game:HttpGet。如果是内部脚本，请确保 CoreGui 权限已开启。</p>
-            
-            <h4 style="margin: 20px 0 10px 0;">Q: 如何修改全局颜色？</h4>
-            <p style="font-size: 0.9rem; color: var(--text-dim);">A: 源码顶部的 Theme 表中含有 Accent 变量。你可以将其修改为你喜欢的任意 Color3 数值，所有组件将自动同步颜色。</p>
-            
-            <h4 style="margin: 20px 0 10px 0;">Q: 最小化球找不到了怎么办？</h4>
-            <p style="font-size: 0.9rem; color: var(--text-dim);">A: 最小化球默认出现在屏幕正上方。如果被遮挡，重新运行脚本即可，自动清理功能会重置它的位置。</p>
+        <div class="api-card">
+            <h3>Tab:AddInput(text, placeholder, callback)</h3>
+            <p>文本输入。用户输入完成后（按下回车或点选别处）回传字符串。</p>
+            <div class="code-container">
+                <button class="copy-btn" onclick="copy(this)">复制</button>
+<pre><code>MainTab:AddInput("特定目标", "输入玩家名称...", function(t)
+    Target = t
+end)</code></pre>
+            </div>
+        </div>
+
+        <div class="api-card">
+            <h3>Tab:AddLabel(text) & :Set(newText)</h3>
+            <p>文本标签。不仅能显示，还能返回一个对象用于后续动态修改文字。</p>
+            <div class="code-container">
+                <button class="copy-btn" onclick="copy(this)">复制</button>
+<pre><code>local MyLabel = MainTab:AddLabel("当前金币: 0")
+-- 之后可以用 MyLabel:Set("当前金币: 999") 动态刷新</code></pre>
+            </div>
+        </div>
+
+        <div class="api-card">
+            <h3>Tab:AddDivider()</h3>
+            <p>视觉分割线。在长页面中区分不同功能模块，自带强调色透明度处理。</p>
+            <div class="code-container">
+                <button class="copy-btn" onclick="copy(this)">复制</button>
+<pre><code>MainTab:AddDivider()</code></pre>
+            </div>
+        </div>
+
+        <h2 class="section-title" id="adv">📜 第五阶段：核心逻辑说明</h2>
+        <div class="info-panel">
+            <p><b>1. UI 渲染安全：</b>本库内置了自动前缀检测。如果你的脚本运行出错崩了，第二次运行会自动销毁之前的残余窗口，绝不占内存。</p>
+            <p><b>2. 最小化球逻辑：</b>源码中的绿色/黄色控制按钮不仅是摆设。点击黄色按钮会触发 UI 缩放动画并隐藏至顶部的“悬浮球”，再次点击悬浮球即可恢复。</p>
+            <p><b>3. 主题自定义：</b>在源码最上方的 <code>Theme</code> 表中，你可以修改 <code>Accent</code> 颜色。改一处，全库所有开关、进度条、分割线都会同步变色。</p>
         </div>
 
         <footer>
-            zhiUI Framework © 2026<br>
-            由 yda66722-hash 提供技术支持 | 为 Roblox 脚本而生
+            zhiUI Framework Documentation © 2026<br>
+            Designed by zhi | Optimized for Users
         </footer>
     </div>
 
     <script>
-        function copyCode(btn) {
-            const pre = btn.nextElementSibling;
-            const text = pre.innerText;
-            navigator.clipboard.writeText(text).then(() => {
-                const originalText = btn.innerText;
-                btn.innerText = "已复制!";
-                btn.classList.add("active");
+        function copy(btn) {
+            const code = btn.nextElementSibling.innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                const old = btn.innerText;
+                btn.innerText = "已复制 √";
+                btn.style.background = "#28c740";
                 setTimeout(() => {
-                    btn.innerText = originalText;
-                    btn.classList.remove("active");
+                    btn.innerText = old;
+                    btn.style.background = "rgba(255,255,255,0.1)";
                 }, 1500);
             });
         }
