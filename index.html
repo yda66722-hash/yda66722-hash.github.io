@@ -3,242 +3,274 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>zhiUI Framework - 完整 API 官方文档</title>
+    <title>zhiUI Framework - Official Docs</title>
     <style>
         :root {
-            --bg: #0a0a0a;
-            --card: #161616;
+            --bg: #050505;
+            --sidebar-bg: #111111;
+            --card-bg: #181818;
             --accent: #007aff;
-            --code-bg: #000;
             --text: #ffffff;
-            --text-dim: #888;
-            --success: #28c740;
+            --text-dim: #a0a0a0;
+            --code-bg: #000000;
+            --success: #34c759;
         }
 
         body {
             background-color: var(--bg);
             color: var(--text);
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            margin: 0; padding: 0; line-height: 1.6;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            margin: 0;
+            display: flex;
+            overflow-x: hidden;
         }
 
-        /* 侧边快速导航 */
-        .nav-sidebar {
+        /* 侧边栏 */
+        .sidebar {
+            width: 280px;
+            height: 100vh;
+            background: var(--sidebar-bg);
+            border-right: 1px solid #222;
             position: fixed;
-            left: 20px; top: 100px;
-            width: 150px;
-            display: flex; flex-direction: column; gap: 10px;
-        }
-        .nav-link { color: var(--text-dim); text-decoration: none; font-size: 13px; transition: 0.3s; }
-        .nav-link:hover { color: var(--accent); }
-
-        .container { max-width: 900px; margin: 80px auto; padding: 0 40px; }
-
-        header { border-bottom: 1px solid #222; padding-bottom: 30px; margin-bottom: 50px; }
-        header h1 { font-size: 2.8rem; margin: 0; color: var(--accent); }
-
-        .section-title {
-            font-size: 1.6rem; margin: 60px 0 25px;
-            padding-bottom: 10px; border-bottom: 2px solid #222;
-            display: flex; align-items: center; gap: 10px;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-y: auto;
+            z-index: 100;
         }
 
-        /* 功能块卡片 */
-        .api-card {
-            background: var(--card);
-            border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 35px;
-            border: 1px solid #222;
+        .logo-area {
+            padding: 20px 0;
+            border-bottom: 1px solid #222;
+            margin-bottom: 20px;
         }
-        .api-card h3 { margin-top: 0; color: var(--accent); font-family: monospace; }
-        .api-card p { font-size: 0.95rem; color: #ccc; }
 
-        /* 代码区 */
-        .code-container {
-            position: relative;
-            background: var(--code-bg);
+        .logo-area h2 { margin: 0; color: var(--accent); font-weight: 800; letter-spacing: 1px; }
+
+        .nav-item {
+            display: block;
+            padding: 12px 15px;
+            color: var(--text-dim);
+            text-decoration: none;
             border-radius: 8px;
+            margin-bottom: 5px;
+            transition: 0.2s;
+            font-size: 14px;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: rgba(0, 122, 255, 0.1);
+            color: var(--accent);
+        }
+
+        /* 主内容区 */
+        .main-content {
+            margin-left: 280px;
+            flex: 1;
+            padding: 40px 60px;
+            max-width: 1000px;
+        }
+
+        /* 语言切换器 */
+        .lang-switch {
+            position: fixed;
+            top: 20px;
+            right: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid #333;
+            padding: 5px;
+            border-radius: 20px;
+            display: flex;
+            z-index: 1000;
+        }
+
+        .lang-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-dim);
+            padding: 8px 18px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .lang-btn.active {
+            background: var(--accent);
+            color: white;
+        }
+
+        /* API 卡片 */
+        .section-title { font-size: 2rem; margin-top: 60px; border-bottom: 1px solid #222; padding-bottom: 10px; }
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 25px;
+            margin: 25px 0;
+            border: 1px solid #252525;
+            position: relative;
+        }
+
+        .card h3 { margin-top: 0; color: var(--accent); font-family: monospace; }
+        .card p { color: var(--text-dim); font-size: 0.95rem; }
+
+        /* 代码高亮 */
+        .code-block {
+            background: var(--code-bg);
+            padding: 20px;
+            border-radius: 10px;
             border: 1px solid #333;
             margin-top: 15px;
+            position: relative;
+            overflow-x: auto;
         }
-        pre { margin: 0; padding: 20px; font-size: 13px; color: #abb2bf; overflow-x: auto; }
-        
+
+        pre { margin: 0; font-family: 'Fira Code', 'Consolas', monospace; font-size: 13px; color: #abb2bf; }
+
         .copy-btn {
             position: absolute; right: 10px; top: 10px;
-            background: rgba(255,255,255,0.1); border: none; color: #fff;
-            padding: 5px 12px; border-radius: 5px; cursor: pointer; font-size: 12px;
-        }
-        .copy-btn:hover { background: var(--accent); }
-
-        /* 说明板 */
-        .info-panel {
-            background: rgba(0, 122, 255, 0.05);
-            border-left: 4px solid var(--accent);
-            padding: 20px; margin: 40px 0; border-radius: 0 8px 8px 0;
+            background: rgba(255,255,255,0.05); border: 1px solid #333; color: white;
+            padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 11px;
         }
 
-        .tag { background: #333; padding: 2px 8px; border-radius: 4px; font-size: 11px; vertical-align: middle; }
-
-        footer { text-align: center; padding: 80px 0; color: #444; font-size: 14px; }
-
-        @media (max-width: 1000px) { .nav-sidebar { display: none; } }
+        /* 移动端适配 */
+        @media (max-width: 800px) {
+            .sidebar { transform: translateX(-100%); transition: 0.3s; }
+            .main-content { margin-left: 0; padding: 20px; }
+        }
     </style>
 </head>
 <body>
 
-    <div class="nav-sidebar">
-        <a href="#init" class="nav-link">1. 初始化</a>
-        <a href="#notify" class="nav-link">2. 通知消息</a>
-        <a href="#tab" class="nav-link">3. 分页管理</a>
-        <a href="#elements" class="nav-link">4. 基础组件</a>
-        <a href="#adv" class="nav-link">5. 进阶说明</a>
+    <div class="lang-switch">
+        <button class="lang-btn active" onclick="setLang('zh')">中文</button>
+        <button class="lang-btn" onclick="setLang('en')">English</button>
     </div>
 
-    <div class="container">
-        <header>
-            <h1>zhiUI 全功能百科</h1>
-            <p>本文档基于底层源码，涵盖所有 API 接口与交互逻辑。</p>
+    <aside class="sidebar">
+        <div class="logo-area">
+            <h2>zhiUI HUB</h2>
+        </div>
+        <nav id="side-nav">
+            </nav>
+    </aside>
+
+    <main class="main-content">
+        <header id="hero">
+            <h1 id="main-title">载入中...</h1>
+            <p id="main-subtitle"></p>
         </header>
 
-        <h2 class="section-title" id="init">📡 第一阶段：引用与创建</h2>
-        
-        <div class="api-card">
-            <h3>zhiUI:CreateWindow(config) <span class="tag">必选</span></h3>
-            <p>启动框架的核心。它会自动执行：UI 清理、环境检测（gethui/CoreGui）、移动端自适应（UIScale）以及主窗口拖拽初始化。</p>
-            <div class="code-container">
-                <button class="copy-btn" onclick="copy(this)">复制</button>
-<pre><code>local Window = zhiUI:CreateWindow({
-    Title = "zhiUI Premium Hub" -- 你的标题
-})</code></pre>
+        <div id="content-area">
             </div>
-        </div>
 
-        <h2 class="section-title" id="notify">🔔 第二阶段：反馈系统</h2>
-        
-        <div class="api-card">
-            <h3>zhiUI:Notify(title, desc, duration)</h3>
-            <p>在屏幕右下角呼出一个果冻动效弹窗。内容过长时会自动折叠文本（TextWrapped）。</p>
-            <div class="code-container">
-                <button class="copy-btn" onclick="copy(this)">复制</button>
-<pre><code>zhiUI:Notify("系统公告", "脚本已成功加载，祝你游戏愉快！", 5)</code></pre>
-            </div>
-        </div>
-
-        <h2 class="section-title" id="tab">📂 第三阶段：结构定义</h2>
-        
-        <div class="api-card">
-            <h3>Window:AddTab(name)</h3>
-            <p>创建侧边栏分类。每个 Tab 按钮都带有 <b>JellyTab</b> 悬停缩放动画。点击时自动处理 CanvasSize 滑动区域。</p>
-            <div class="code-container">
-                <button class="copy-btn" onclick="copy(this)">复制</button>
-<pre><code>local MainTab = Window:AddTab("主要功能")
-local SetTab = Window:AddTab("设置选项")</code></pre>
-            </div>
-        </div>
-
-        <h2 class="section-title" id="elements">🛠️ 第四阶段：全量组件 (All Elements)</h2>
-
-        <div class="api-card">
-            <h3>Tab:AddButton(text, callback)</h3>
-            <p>基础点击组件。内置 <b>JellyClick</b> 物理弹性反馈，手感极佳。</p>
-            <div class="code-container">
-                <button class="copy-btn" onclick="copy(this)">复制</button>
-<pre><code>MainTab:AddButton("重置传送点", function()
-    print("触发动作")
-end)</code></pre>
-            </div>
-        </div>
-
-        <div class="api-card">
-            <h3>Tab:AddToggle(text, default, callback)</h3>
-            <p>逻辑开关。状态改变时，滑动圆点会执行 <b>Elastic</b> 动画，并根据状态切换强调色。</p>
-            <div class="code-container">
-                <button class="copy-btn" onclick="copy(this)">复制</button>
-<pre><code>MainTab:AddToggle("自动攻击", false, function(state)
-    _G.AutoAttack = state
-end)</code></pre>
-            </div>
-        </div>
-
-        <div class="api-card">
-            <h3>Tab:AddSlider(text, min, max, default, callback)</h3>
-            <p>数值调节器。支持实时滑动更新数值，常用于步行速度或重力调节。</p>
-            <div class="code-container">
-                <button class="copy-btn" onclick="copy(this)">复制</button>
-<pre><code>MainTab:AddSlider("移动速度", 16, 500, 16, function(v)
-    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = v
-end)</code></pre>
-            </div>
-        </div>
-
-        <div class="api-card">
-            <h3>Tab:AddDropdown(text, list, callback)</h3>
-            <p>折叠选择框。动态计算高度，点击选项后自动收回并更新主显示文本。</p>
-            <div class="code-container">
-                <button class="copy-btn" onclick="copy(this)">复制</button>
-<pre><code>MainTab:AddDropdown("选择模式", {"高效率", "平衡", "低占用"}, function(val)
-    print("当前模式：" .. val)
-end)</code></pre>
-            </div>
-        </div>
-
-        <div class="api-card">
-            <h3>Tab:AddInput(text, placeholder, callback)</h3>
-            <p>文本输入。用户输入完成后（按下回车或点选别处）回传字符串。</p>
-            <div class="code-container">
-                <button class="copy-btn" onclick="copy(this)">复制</button>
-<pre><code>MainTab:AddInput("特定目标", "输入玩家名称...", function(t)
-    Target = t
-end)</code></pre>
-            </div>
-        </div>
-
-        <div class="api-card">
-            <h3>Tab:AddLabel(text) & :Set(newText)</h3>
-            <p>文本标签。不仅能显示，还能返回一个对象用于后续动态修改文字。</p>
-            <div class="code-container">
-                <button class="copy-btn" onclick="copy(this)">复制</button>
-<pre><code>local MyLabel = MainTab:AddLabel("当前金币: 0")
--- 之后可以用 MyLabel:Set("当前金币: 999") 动态刷新</code></pre>
-            </div>
-        </div>
-
-        <div class="api-card">
-            <h3>Tab:AddDivider()</h3>
-            <p>视觉分割线。在长页面中区分不同功能模块，自带强调色透明度处理。</p>
-            <div class="code-container">
-                <button class="copy-btn" onclick="copy(this)">复制</button>
-<pre><code>MainTab:AddDivider()</code></pre>
-            </div>
-        </div>
-
-        <h2 class="section-title" id="adv">📜 第五阶段：核心逻辑说明</h2>
-        <div class="info-panel">
-            <p><b>1. UI 渲染安全：</b>本库内置了自动前缀检测。如果你的脚本运行出错崩了，第二次运行会自动销毁之前的残余窗口，绝不占内存。</p>
-            <p><b>2. 最小化球逻辑：</b>源码中的绿色/黄色控制按钮不仅是摆设。点击黄色按钮会触发 UI 缩放动画并隐藏至顶部的“悬浮球”，再次点击悬浮球即可恢复。</p>
-            <p><b>3. 主题自定义：</b>在源码最上方的 <code>Theme</code> 表中，你可以修改 <code>Accent</code> 颜色。改一处，全库所有开关、进度条、分割线都会同步变色。</p>
-        </div>
-
-        <footer>
-            zhiUI Framework Documentation © 2026<br>
-            Designed by zhi | Optimized for Users
+        <footer style="margin-top: 100px; text-align: center; color: #444;">
+            zhiUI Framework © 2026 | Developed by yda66722-hash
         </footer>
-    </div>
+    </main>
 
     <script>
-        function copy(btn) {
-            const code = btn.nextElementSibling.innerText;
-            navigator.clipboard.writeText(code).then(() => {
-                const old = btn.innerText;
-                btn.innerText = "已复制 √";
-                btn.style.background = "#28c740";
+        const translations = {
+            zh: {
+                title: "zhiUI 开发者文档",
+                subtitle: "为 Roblox 性能与审美优化的现代化脚本 UI 库",
+                sections: {
+                    init: "核心初始化",
+                    notify: "通知系统",
+                    elements: "全功能组件"
+                },
+                items: [
+                    { id: "load", type: "init", name: "远程引用", desc: "将此代码放入脚本顶部以加载 zhiUI。", code: 'local zhiUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/yda66722-hash/zhiUI/refs/heads/main/zhiUI"))()' },
+                    { id: "win", type: "init", name: "创建窗口", desc: "初始化主窗体，支持移动端自适应和自动清理旧版 UI。", code: 'local Window = zhiUI:CreateWindow({Title = "zhiUI Hub"})' },
+                    { id: "notif", type: "notify", name: "发送通知", desc: "在右下角弹出果冻反馈弹窗。", code: 'zhiUI:Notify("标题", "内容描述", 5)' },
+                    { id: "tab", type: "elements", name: "添加分页", desc: "创建侧边栏分类页面。", code: 'local MainTab = Window:AddTab("主页")' },
+                    { id: "btn", type: "elements", name: "按钮 (Button)", desc: "带有物理挤压感的回调按钮。", code: 'MainTab:AddButton("执行", function() print("Click!") end)' },
+                    { id: "tog", type: "elements", name: "开关 (Toggle)", desc: "iOS 风格滑动开关，控制逻辑开启/关闭。", code: 'MainTab:AddToggle("开关", false, function(s) print(s) end)' },
+                    { id: "sld", type: "elements", name: "滑动条 (Slider)", desc: "精确数值调节，适用于速度、重力调节。", code: 'MainTab:AddSlider("速度", 16, 200, 16, function(v) print(v) end)' },
+                    { id: "drp", type: "elements", name: "下拉框 (Dropdown)", desc: "动态高度折叠菜单。", code: 'MainTab:AddDropdown("模式", {"A", "B"}, function(v) end)' },
+                    { id: "inp", type: "elements", name: "输入框 (Input)", desc: "获取用户文本输入。", code: 'MainTab:AddInput("玩家ID", "输入...", function(t) end)' }
+                ],
+                copy: "复制",
+                copied: "已复制!"
+            },
+            en: {
+                title: "zhiUI Developer Docs",
+                subtitle: "Modern Script UI Library optimized for Roblox performance.",
+                sections: {
+                    init: "Core Initialization",
+                    notify: "Notification System",
+                    elements: "All Components"
+                },
+                items: [
+                    { id: "load", type: "init", name: "Remote Load", desc: "Paste this code at the top of your script to load zhiUI.", code: 'local zhiUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/yda66722-hash/zhiUI/refs/heads/main/zhiUI"))()' },
+                    { id: "win", type: "init", name: "Create Window", desc: "Initialize the main window with mobile scaling & auto-cleanup.", code: 'local Window = zhiUI:CreateWindow({Title = "zhiUI Hub"})' },
+                    { id: "notif", type: "notify", name: "Notify", desc: "Pop up a jelly-style notification in the bottom right.", code: 'zhiUI:Notify("Title", "Description", 5)' },
+                    { id: "tab", type: "elements", name: "Add Tab", desc: "Create a new category in the sidebar.", code: 'local MainTab = Window:AddTab("Home")' },
+                    { id: "btn", type: "elements", name: "Button", desc: "Button with physical jelly feedback.", code: 'MainTab:AddButton("Execute", function() print("Click!") end)' },
+                    { id: "tog", type: "elements", name: "Toggle", desc: "iOS style switch for boolean logic.", code: 'MainTab:AddToggle("Toggle", false, function(s) print(s) end)' },
+                    { id: "sld", type: "elements", name: "Slider", desc: "Precise value adjustment for speed/gravity.", code: 'MainTab:AddSlider("Speed", 16, 200, 16, function(v) print(v) end)' },
+                    { id: "drp", type: "elements", name: "Dropdown", desc: "Collapsible menu with dynamic height.", code: 'MainTab:AddDropdown("Mode", {"A", "B"}, function(v) end)' },
+                    { id: "inp", type: "elements", name: "Input", desc: "Get user text input.", code: 'MainTab:AddInput("Player ID", "Enter...", function(t) end)' }
+                ],
+                copy: "Copy",
+                copied: "Copied!"
+            }
+        };
+
+        let currentLang = 'zh';
+
+        function setLang(lang) {
+            currentLang = lang;
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.innerText.toLowerCase().includes(lang === 'en' ? 'eng' : '中'));
+            });
+            render();
+        }
+
+        function copyCode(btn, text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const original = btn.innerText;
+                btn.innerText = translations[currentLang].copied;
+                btn.style.background = "var(--success)";
                 setTimeout(() => {
-                    btn.innerText = old;
-                    btn.style.background = "rgba(255,255,255,0.1)";
+                    btn.innerText = original;
+                    btn.style.background = "rgba(255,255,255,0.05)";
                 }, 1500);
             });
         }
+
+        function render() {
+            const data = translations[currentLang];
+            document.getElementById('main-title').innerText = data.title;
+            document.getElementById('main-subtitle').innerText = data.subtitle;
+
+            let sideHtml = '';
+            let contentHtml = '';
+
+            for (const [key, sectionTitle] of Object.entries(data.sections)) {
+                sideHtml += `<div style="color:var(--accent); font-size:12px; margin:20px 0 10px 15px; font-weight:bold; text-transform:uppercase;">${sectionTitle}</div>`;
+                contentHtml += `<h2 class="section-title" id="${key}">${sectionTitle}</h2>`;
+                
+                data.items.filter(i => i.type === key).forEach(item => {
+                    sideHtml += `<a href="#${item.id}" class="nav-item">${item.name}</a>`;
+                    contentHtml += `
+                        <div class="card" id="${item.id}">
+                            <h3>${item.name}</h3>
+                            <p>${item.desc}</p>
+                            <div class="code-block">
+                                <button class="copy-btn" onclick="copyCode(this, \`${item.code}\`)">${data.copy}</button>
+                                <pre><code>${item.code}</code></pre>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            document.getElementById('side-nav').innerHTML = sideHtml;
+            document.getElementById('content-area').innerHTML = contentHtml;
+        }
+
+        render();
     </script>
 </body>
 </html>
